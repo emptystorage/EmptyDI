@@ -1,6 +1,8 @@
-﻿namespace EmptyDI
+﻿using System;
+
+namespace EmptyDI
 {
-    public interface IClonableDIObject<T>
+    public interface IClonableDIObject<T> : IDisposable
     {
         T Clone(T clonableObject);
     }

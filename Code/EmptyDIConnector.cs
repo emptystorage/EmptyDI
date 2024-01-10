@@ -8,9 +8,11 @@ using EmptyDI.Code.Context;
 
 namespace EmptyDI
 {
-    public static class EmptyDIConector
+    public static class EmptyDIConnector
     {
         public static ProjectContext ProjectContext { get; private set; }
+
+        internal static event Action<Type> OnBindObject;
 
         /// <summary>
         /// Добавить объект в контейнер, как зависимость
@@ -27,6 +29,8 @@ namespace EmptyDI
                 throw new Exception($"Нельзя добавить реализацию объекта - {typeof(T).Name}, который является интерфейсом или абстрактным классом.");
             }
 
+            OnBindObject?.Invoke(typeof(T));
+
             var builder = new BaseBindBuilder<T>(containerTag);
             installer.AddBindBuilder(builder);
             return builder;
@@ -42,6 +46,13 @@ namespace EmptyDI
         public static BaseBindBuilder<T> Bind<T>(this IInstaller installer, T implementation, string containerTag = "common")
             where T : class
         {
+            if (typeof(T).IsInterface || typeof(T).IsAbstract)
+            {
+                throw new Exception($"Нельзя добавить реализацию объекта - {typeof(T).Name}, который является интерфейсом или абстрактным классом.");
+            }
+
+            OnBindObject?.Invoke(typeof(T));
+
             var builder = new BaseBindBuilder<T>(containerTag, implementation);
             installer.AddBindBuilder(builder);
             return builder;

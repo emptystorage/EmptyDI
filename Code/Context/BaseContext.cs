@@ -16,8 +16,6 @@ namespace EmptyDI.Code.Context
 
         private void Awake()
         {
-            ContextCreated();
-
             if (_executeBindType != ExecuteBindType.Awake) return;
 
             ExecuteBind();
@@ -40,11 +38,14 @@ namespace EmptyDI.Code.Context
 
         private void ExecuteBind()
         {
+            ContextStarted();
             ExecuteInstallers(_monoInstallers);
             ExecuteInstallers(_scriptableObjectInstallers);
+            ContextCompleted();
         }
 
-        protected virtual void ContextCreated() { }
+        protected virtual void ContextStarted() { }
+        protected virtual void ContextCompleted() { }
 
         private void ExecuteInstallers(IInstaller[] installers)
         {

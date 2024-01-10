@@ -6,9 +6,9 @@ using EmptyDI.Code.Implementation;
 
 namespace EmptyDI.Code.Tools
 {
-    public static class ImplementationTools
+    internal static class ImplementationTools
     {
-        public static MethodBase GetConstructor(Type implementationType)
+        internal static MethodBase GetConstructor(Type implementationType)
         {
             MethodBase constructor = null;
 

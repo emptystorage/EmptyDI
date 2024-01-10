@@ -16,7 +16,9 @@ namespace EmptyDI.Code.BindBuilder
         public BaseBindBuilder(string containerTag, T @object = null)
         {
             var containerBank = InternalLocator.GetObject<ContainerBank>();
-            Info = new ImplementationInfo(@object, typeof(T), containerBank.FindImplementation);
+            var transitImplementationbank = InternalLocator.GetObject<TransitImplementationBank>();
+
+            Info = new ImplementationInfo(@object, typeof(T), transitImplementationbank, containerBank.FindImplementation);
 
             ContainerTag = containerTag;
             _isImplemented = @object != null;

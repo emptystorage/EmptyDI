@@ -1,6 +1,8 @@
 ﻿using System;
 using EmptyDI.Code.Tools;
 
+using Object = UnityEngine.Object;
+
 namespace EmptyDI.Code.Implementation
 {
     public enum BindingType
@@ -9,16 +11,23 @@ namespace EmptyDI.Code.Implementation
         Transit
     }
 
-    public sealed class ImplementationInfo : IDisposable
+    internal sealed class ImplementationInfo : IDisposable
     {
         private readonly Type ImplementationType;
+        private readonly TransitImplementationBank Bank;
 
         private object _implementation;
         private bool _isDisposable;
+        private bool _isMonoObject;
 
-        public ImplementationInfo(object implementation, Type implementationType, Func<Type, ImplementationInfo> onGetImplementationCallback)
+        internal ImplementationInfo(
+            object implementation, 
+            Type implementationType, 
+            TransitImplementationBank bank,
+            Func<Type, ImplementationInfo> onGetImplementationCallback)
         {
             ImplementationType = implementationType;
+            Bank = bank;
             ParamsInfo = new ImplementationConstructorParamsInfo(
                                         ImplementationTools.GetConstructor(implementationType), 
                                         implementationType, 
@@ -26,37 +35,77 @@ namespace EmptyDI.Code.Implementation
 
             _implementation = implementation;
             _isDisposable = implementationType.GetInterface(nameof(IDisposable)) != null;
+            _isMonoObject = implementationType.IsSubclassOf(typeof(UnityEngine.MonoBehaviour));
         }
 
-        public ImplementationConstructorParamsInfo ParamsInfo { get; }
+        internal ImplementationConstructorParamsInfo ParamsInfo { get; }
+        internal BindingType BindingType { get; set; }
 
-        public BindingType BindingType { get; set; }
-
-        public T Implementation<T>()
+        internal T Implementation<T>()
             where T : class
         {
             if (BindingType == BindingType.Single)
             {
                 if (_implementation == null)
                 {
-                    _implementation = new ImplementationFactory().Create<T>(ImplementationType, ParamsInfo, _implementation);
+                    _implementation = new ImplementationFactory().Create<T>(ImplementationType, ParamsInfo, _implementation, _isMonoObject);
                 }
 
                 return _implementation as T;
             }
             else
             {
+                var @object = new ImplementationFactory().Clone<T>(ImplementationType, ParamsInfo, _implementation, _isMonoObject);
+                Bank.Add(ImplementationType, @object);
 
-                return new ImplementationFactory().Clone<T>(ImplementationType, ParamsInfo, _implementation) as T;
+                return @object as T;
             }
         }
 
         public void Dispose()
         {
-            if (_isDisposable & _implementation != null)
+            if (_isDisposable)
             {
-                var disposableImplementation = _implementation as IDisposable;
-                disposableImplementation.Dispose();
+                if(_implementation != null) 
+                {
+                    var disposableImplementation = _implementation as IDisposable;
+                    disposableImplementation.Dispose();
+                }                
+
+                if(BindingType == BindingType.Transit)
+                {
+                    Bank.ForEach(
+                        ImplementationType,
+                        x =>
+                        {
+                            var disposedImpl = x as IDisposable;
+                            disposedImpl.Dispose();
+                        });
+
+                    Bank.Remove(ImplementationType);
+                }
+            }
+            else
+            {
+                if(BindingType == BindingType.Transit)
+                {
+                    Bank.Remove(ImplementationType);
+                }
+            }
+
+            if (_isMonoObject)
+            {
+                if(BindingType == BindingType.Transit)
+                {
+                    Bank.ForEach(
+                        ImplementationType,
+                        x =>
+                        {
+                            Object.Destroy(x as Object);
+                        });
+
+                    Bank.Remove(ImplementationType);
+                }
             }
 
             _implementation = null;

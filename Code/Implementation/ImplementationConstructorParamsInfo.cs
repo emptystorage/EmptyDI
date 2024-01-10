@@ -4,14 +4,13 @@ using System.Reflection;
 
 namespace EmptyDI.Code.Implementation
 {
-    public sealed class ImplementationConstructorParamsInfo : IDisposable
+    internal sealed class ImplementationConstructorParamsInfo : IDisposable
     {
         private List<ConstructorParameterInfo> _params = new();
 
-        public ImplementationConstructorParamsInfo(MethodBase constructor, Type implementationType, Func<Type, ImplementationInfo> onGetImplementationInfo)
+        internal ImplementationConstructorParamsInfo(MethodBase constructor, Type implementationType, Func<Type, ImplementationInfo> onGetImplementationInfo)
         {
             Constructor = constructor;
-            IsMonoObject = implementationType.IsSubclassOf(typeof(UnityEngine.MonoBehaviour));
             OnGetBindedImplementationInfo = onGetImplementationInfo;
 
             var @params = constructor.GetParameters();
@@ -34,7 +33,7 @@ namespace EmptyDI.Code.Implementation
             }
         }
 
-        public object[] Params
+        internal object[] Params
         {
             get
             {
@@ -68,12 +67,11 @@ namespace EmptyDI.Code.Implementation
             }
         }
 
-        public MethodBase Constructor { get; }
-        public bool IsMonoObject { get; }
+        internal MethodBase Constructor { get; }        
 
         private Func<Type, ImplementationInfo> OnGetBindedImplementationInfo;
 
-        public void ChangeConstructorParametersValue(Queue<ConstructorParameterInfo> parameters)
+        internal void ChangeConstructorParametersValue(Queue<ConstructorParameterInfo> parameters)
         {
             var parameterIndexTable = new Dictionary<Type, int>();
 
@@ -94,7 +92,7 @@ namespace EmptyDI.Code.Implementation
             }
         }
 
-        public void ChangeConstructorParametersType(Queue<ConstructorParameterInfo> parameters)
+        internal void ChangeConstructorParametersType(Queue<ConstructorParameterInfo> parameters)
         {
             while(parameters.Count > 0)
             {
@@ -115,7 +113,7 @@ namespace EmptyDI.Code.Implementation
             }
         }
 
-        public void ChangeParameterValue(ConstructorParameterInfo parameterInfo, int paramterIndex)
+        internal void ChangeParameterValue(ConstructorParameterInfo parameterInfo, int paramterIndex)
         {
             var info = _params.FindAll(x => x.ParameterType.Equals(parameterInfo.ParameterType));
 
@@ -127,6 +125,8 @@ namespace EmptyDI.Code.Implementation
 
         public void Dispose()
         {
+            OnGetBindedImplementationInfo = null;
+
             _params.ForEach(x => x.Dispose());
             _params = null;
 

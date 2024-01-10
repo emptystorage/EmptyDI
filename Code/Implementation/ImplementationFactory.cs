@@ -5,12 +5,12 @@ using Object = UnityEngine.Object;
 
 namespace EmptyDI.Code.Implementation
 {
-    public struct ImplementationFactory
+    internal struct ImplementationFactory
     {
-        public object Create<T>(Type type, ImplementationConstructorParamsInfo constructParameter, object implementation)
+        internal object Create<T>(Type type, ImplementationConstructorParamsInfo constructParameter, object implementation, bool isMonoObject)
             where T : class
         {
-            if (constructParameter.IsMonoObject)
+            if (isMonoObject)
             {
                 var @object = (implementation == null)
                                     ? new GameObject().AddComponent(type)
@@ -25,10 +25,10 @@ namespace EmptyDI.Code.Implementation
             }
         }
 
-        public object Clone<T>(Type type, ImplementationConstructorParamsInfo constructParameter, object implementation)
+        internal object Clone<T>(Type type, ImplementationConstructorParamsInfo constructParameter, object implementation, bool isMonoObject)
             where T : class
         {
-            if (constructParameter.IsMonoObject)
+            if (isMonoObject)
             {
                 var @object = (implementation == null)
                                     ? new GameObject().AddComponent(type)
@@ -40,8 +40,10 @@ namespace EmptyDI.Code.Implementation
             }
             else
             {
-                var @object = implementation as IClonableDIObject<T>;
-                return @object.Clone(implementation as T);
+                var @object = (implementation == null)
+                                    ? Create<T>(type, constructParameter, implementation, isMonoObject)
+                                    : ((IClonableDIObject<T>)implementation).Clone(implementation as T);
+                return @object;
             }
         }
     }

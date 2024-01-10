@@ -6,11 +6,11 @@ using EmptyDI.Code.Implementation;
 
 namespace EmptyDI.Code.DIContainer
 {
-    public sealed class ContainerBank : ILocatorObject
+    internal sealed class ContainerBank : ILocatorObject
     {
         private Dictionary<string, Container> _containerCollection = new();
 
-        public Container Get(string tag)
+        internal Container Get(string tag)
         {
             if(!_containerCollection.TryGetValue(tag, out var container))
             {
@@ -21,9 +21,9 @@ namespace EmptyDI.Code.DIContainer
             return container;
         }
 
-        public ImplementationInfo FindImplementation<T>() => FindImplementation(typeof(T));
+        internal ImplementationInfo FindImplementation<T>() => FindImplementation(typeof(T));
 
-        public ImplementationInfo FindImplementation(Type implementationType)
+        internal ImplementationInfo FindImplementation(Type implementationType)
         {
             foreach (var item in _containerCollection)
             {
@@ -36,7 +36,15 @@ namespace EmptyDI.Code.DIContainer
             return null;
         }
 
-        public void Remove(string tag)
+        internal void RemoveImplementation(Type implementationType)
+        {
+            foreach(var item in _containerCollection)
+            {
+                item.Value.RemoveImplementationInfo(implementationType);
+            }
+        }
+
+        internal void Remove(string tag)
         {
             if(_containerCollection.TryGetValue(tag, out var container))
             {
