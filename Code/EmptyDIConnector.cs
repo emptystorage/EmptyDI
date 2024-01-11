@@ -5,6 +5,7 @@ using EmptyDI.Code.BindBuilder;
 using EmptyDI.Code.Locator;
 using EmptyDI.Code.DIContainer;
 using EmptyDI.Code.Context;
+using EmptyDI.Pool;
 
 namespace EmptyDI
 {
@@ -21,19 +22,10 @@ namespace EmptyDI
         /// <param name="installer"></param>
         /// <param name="containerTag">Идентификатор контейнера</param>
         /// <returns>Объект настройки зависимость <see cref="BaseBindBuilder{T}"/></returns>
-        public static BaseBindBuilder<T> Bind<T>(this IInstaller installer, string containerTag = "common")
+        public static SingleBindBuilder<T> Bind<T>(this IInstaller installer, string containerTag = "common")
             where T : class
         {
-            if (typeof(T).IsInterface || typeof(T).IsAbstract)
-            {
-                throw new Exception($"Нельзя добавить реализацию объекта - {typeof(T).Name}, который является интерфейсом или абстрактным классом.");
-            }
-
-            OnBindObject?.Invoke(typeof(T));
-
-            var builder = new BaseBindBuilder<T>(containerTag);
-            installer.AddBindBuilder(builder);
-            return builder;
+            return Bind<T>(installer, null, containerTag);
         }
         /// <summary>
         /// Добавить объект в контейнер, как зависимость
@@ -43,20 +35,38 @@ namespace EmptyDI
         /// <param name="implementation">Реализация объекта </param>
         /// <param name="containerTag">Идентификатор контейнера</param>
         /// <returns>Объект настройки зависимость <see cref="BaseBindBuilder{T}"/></returns>
-        public static BaseBindBuilder<T> Bind<T>(this IInstaller installer, T implementation, string containerTag = "common")
+        public static SingleBindBuilder<T> Bind<T>(this IInstaller installer, T implementation, string containerTag = "common")
             where T : class
         {
-            if (typeof(T).IsInterface || typeof(T).IsAbstract)
-            {
-                throw new Exception($"Нельзя добавить реализацию объекта - {typeof(T).Name}, который является интерфейсом или абстрактным классом.");
-            }
-
+            ParameterValidation<T>();
             OnBindObject?.Invoke(typeof(T));
 
-            var builder = new BaseBindBuilder<T>(containerTag, implementation);
+            var builder = new SingleBindBuilder<T>(containerTag, implementation);
             installer.AddBindBuilder(builder);
             return builder;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="P"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="installer"></param>
+        /// <param name="implementation"></param>
+        /// <returns></returns>
+        public static SingleBindBuilder<T> Bind<P, T>(this IInstaller installer, T implementation = null)
+            where P : DIPool<T>, new()
+            where T : class
+        {
+            ParameterValidation<P>();
+            ParameterValidation<T>();
+            OnBindObject?.Invoke(typeof(P));
+            OnBindObject?.Invoke(typeof(T));
+
+            var builder = new PoolBindBuilder<P, T>(implementation);
+            installer.AddBindBuilder(builder);
+            return builder.ObjectBuilder;
+        }
+
         /// <summary>
         /// Получить объект
         /// </summary>
@@ -79,6 +89,15 @@ namespace EmptyDI
             var projectContextPrefab = Resources.Load<ProjectContext>(nameof(ProjectContext));
 
             MonoBehaviour.DontDestroyOnLoad(MonoBehaviour.Instantiate(projectContextPrefab).gameObject);
+        }
+
+        private static void ParameterValidation<T>()
+            where T : class
+        {
+            if (typeof(T).IsInterface || typeof(T).IsAbstract)
+            {
+                throw new Exception($"Нельзя добавить реализацию объекта - {typeof(T).Name}, который является интерфейсом или абстрактным классом.");
+            }
         }
     }
 }

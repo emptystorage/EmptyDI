@@ -3,7 +3,7 @@ using EmptyDI.Code.Implementation;
 
 namespace EmptyDI.Code.BindBuilder
 {
-    public partial class BaseBindBuilder<T> : IBindBuilder
+    public partial class SingleBindBuilder<T> : IBindBuilder
         where T : class
     {
         /// <summary>
@@ -12,7 +12,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <typeparam name="T1">Тип параметра</typeparam>
         /// <param name="value">Значение параметра</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereParameters<T1>(T1 value)
+        public SingleBindBuilder<T> WhereParameters<T1>(T1 value)
         {
             var parameters = new Queue<ConstructorParameterInfo>();
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value));
@@ -28,7 +28,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="value1">Значение параметра 1</param>
         /// <param name="value2">Значение параметра 2</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereParameters<T1, T2>(T1 value1, T2 value2)
+        public SingleBindBuilder<T> WhereParameters<T1, T2>(T1 value1, T2 value2)
         {
             var parameters = new Queue<ConstructorParameterInfo>();
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value1));
@@ -47,7 +47,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="value2">Значение параметра 2</param>
         /// <param name="value3">Значение параметра 3</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereParameters<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
+        public SingleBindBuilder<T> WhereParameters<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
         {
             var parameters = new Queue<ConstructorParameterInfo>();
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value1));
@@ -69,7 +69,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="value3">Значение параметра 3</param>
         /// <param name="value4">Значение параметра 4</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereParameters<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
+        public SingleBindBuilder<T> WhereParameters<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
         {
             var parameters = new Queue<ConstructorParameterInfo>();
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value1));
@@ -94,7 +94,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="value4">Значение параметра 4</param>
         /// <param name="value5">Значение параметра 5</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereParameters<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
+        public SingleBindBuilder<T> WhereParameters<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
         {
             var parameters = new Queue<ConstructorParameterInfo>();
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value1));

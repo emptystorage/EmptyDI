@@ -3,7 +3,7 @@ using EmptyDI.Code.Implementation;
 
 namespace EmptyDI.Code.BindBuilder
 {
-    public partial class BaseBindBuilder<T> : IBindBuilder
+    public partial class SingleBindBuilder<T> : IBindBuilder
         where T : class
     {
         /// <summary>
@@ -13,7 +13,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <typeparam name="R1">Тип реализации</typeparam>
         /// <param name="abstaractionValue1">Значение реализации</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereAbstaction<I, R1>(R1 abstaractionValue1 = null)
+        public SingleBindBuilder<T> WhereAbstaction<I, R1>(R1 abstaractionValue1 = null)
             where I : class
             where R1 : class, I
         {
@@ -32,7 +32,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="abstaractionValue1">Значение реализации 1</param>
         /// <param name="abstaractionValue2">Значение реализации 2</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereAbstaction<I, R1, R2>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null)
+        public SingleBindBuilder<T> WhereAbstaction<I, R1, R2>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null)
             where I : class
             where R1 : class, I
             where R2 : class, I
@@ -55,7 +55,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="abstaractionValue2">Значение реализации 2</param>
         /// <param name="abstaractionValue3">Значение реализации 3</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereAbstaction<I, R1, R2, R3>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null)
+        public SingleBindBuilder<T> WhereAbstaction<I, R1, R2, R3>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null)
             where I : class
             where R1 : class, I
             where R2 : class, I
@@ -82,7 +82,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="abstaractionValue3">Значение реализации 3</param>
         /// <param name="abstaractionValue4">Значение реализации 4</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereAbstaction<I, R1, R2, R3, R4>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null, R4 abstaractionValue4 = null)
+        public SingleBindBuilder<T> WhereAbstaction<I, R1, R2, R3, R4>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null, R4 abstaractionValue4 = null)
             where I : class
             where R1 : class, I
             where R2 : class, I
@@ -113,7 +113,7 @@ namespace EmptyDI.Code.BindBuilder
         /// <param name="abstaractionValue4">Значение реализации 4</param>
         /// <param name="abstaractionValue5">Значение реализации 5</param>
         /// <returns></returns>
-        public BaseBindBuilder<T> WhereAbstaction<I, R1, R2, R3, R4, R5>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null, R4 abstaractionValue4 = null, R5 abstaractionValue5 = null)
+        public SingleBindBuilder<T> WhereAbstaction<I, R1, R2, R3, R4, R5>(R1 abstaractionValue1 = null, R2 abstaractionValue2 = null, R3 abstaractionValue3 = null, R4 abstaractionValue4 = null, R5 abstaractionValue5 = null)
             where I : class
             where R1 : class, I
             where R2 : class, I

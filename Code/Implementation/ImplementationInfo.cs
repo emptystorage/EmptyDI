@@ -39,7 +39,10 @@ namespace EmptyDI.Code.Implementation
         }
 
         internal ImplementationConstructorParamsInfo ParamsInfo { get; }
-        internal BindingType BindingType { get; set; }
+        internal BindingType BindingType { get; set; } = BindingType.Single;
+        internal bool IsImplementented => _implementation != null;
+
+        internal event Action OnDispose;
 
         internal T Implementation<T>()
             where T : class
@@ -110,6 +113,8 @@ namespace EmptyDI.Code.Implementation
 
             _implementation = null;
             ParamsInfo.Dispose();
+            OnDispose?.Invoke();
+
             GC.SuppressFinalize(this);
         }
     }
