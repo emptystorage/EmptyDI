@@ -32,7 +32,7 @@ namespace EmptyDI
         /// </summary>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <param name="installer"></param>
-        /// <param name="implementation">Реализация объекта </param>
+        /// <param name="implementation">Реализация объекта</param>
         /// <param name="containerTag">Идентификатор контейнера</param>
         /// <returns>Объект настройки зависимость <see cref="BaseBindBuilder{T}"/></returns>
         public static SingleBindBuilder<T> Bind<T>(this IInstaller installer, T implementation, string containerTag = "common")
@@ -46,12 +46,12 @@ namespace EmptyDI
             return builder;
         }
         /// <summary>
-        /// 
+        /// Добавить объект в контейнер пул и объект, как зависимость
         /// </summary>
-        /// <typeparam name="P"></typeparam>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="P">Тип пула</typeparam>
+        /// <typeparam name="T">Тип объекта</typeparam>
         /// <param name="installer"></param>
-        /// <param name="implementation"></param>
+        /// <param name="implementation">Реализация объекта</param>
         /// <returns></returns>
         public static SingleBindBuilder<T> Bind<P, T>(this IInstaller installer, T implementation = null)
             where P : DIPool<T>, new()
