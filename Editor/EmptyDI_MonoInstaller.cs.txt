@@ -1,0 +1,12 @@
+using UnityEngine;
+using EmptyDI;
+
+#ROOTNAMESPACEBEGIN#	
+	public class #SCRIPTNAME# : MonoInstaller
+	{
+		public override void Install()
+		{
+			#NOTRIM#
+		}
+	}
+#ROOTNAMESPACEEND#
