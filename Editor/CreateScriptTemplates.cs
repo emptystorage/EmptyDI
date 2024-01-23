@@ -8,9 +8,9 @@ namespace EmptyDI
         [MenuItem("Assets/Create/EmptyDI/New Mono Installer", priority = 9)]
         public static void CreateNewPresentorClass()
         {
-            string presentorTemplatePath = "Assets/EmptyDI/Editor/EmptyDI_MonoInstaller.cs.txt";
+            string path = "Assets/EmptyDI/Editor/EmptyDI_MonoInstaller.cs.txt";
 
-            ProjectWindowUtil.CreateScriptAssetFromTemplateFile(presentorTemplatePath, "NewMonoInstaller.cs");
+            ProjectWindowUtil.CreateScriptAssetFromTemplateFile(path, "NewMonoInstaller.cs");
         }
     }
 
