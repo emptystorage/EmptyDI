@@ -88,6 +88,17 @@ namespace EmptyDI
         {
             var projectContextPrefab = Resources.Load<ProjectContext>(nameof(ProjectContext));
 
+            if(projectContextPrefab == null)
+            {
+#if UNITY_EDITOR
+                Code.Tools.EditorTools.CreateProjectContext();
+                projectContextPrefab = Resources.Load<ProjectContext>(nameof(ProjectContext));
+
+#else
+                MonoBehaviour.DontDestroyOnLoad(new GameObject().AddComponent<ProjectContext>().gameObject);
+#endif
+            }
+
             MonoBehaviour.DontDestroyOnLoad(MonoBehaviour.Instantiate(projectContextPrefab).gameObject);
         }
 
