@@ -1,4 +1,5 @@
 using System.IO;
+using UnityEngine;
 using UnityEditor;
 
 namespace EmptyDI
@@ -8,7 +9,13 @@ namespace EmptyDI
         [MenuItem("Assets/Create/EmptyDI/New Mono Installer", priority = 9)]
         public static void CreateNewPresentorClass()
         {
-            string path = "Assets/EmptyDI/Editor/EmptyDI_MonoInstaller.cs.txt";
+            string path = AssetDatabase.GetAssetPath(Resources.Load<TextAsset>("EmptyDI_MonoInstaller.cs"));
+
+            if (string.IsNullOrEmpty(path))
+            {
+                Debug.LogError("Не найден шаблон для создания cs файла для EmptyDI Installer");
+                return;
+            }
 
             ProjectWindowUtil.CreateScriptAssetFromTemplateFile(path, "NewMonoInstaller.cs");
         }
