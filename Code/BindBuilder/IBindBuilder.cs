@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace EmptyDI.Code.BindBuilder
+﻿namespace EmptyDI.Code.BindBuilder
 {
-    public interface IBindBuilder : IDisposable
+    public interface IBindBuilder 
     {
+        int ID { get; }
         void Build();
     }
 }

@@ -3,7 +3,7 @@ using EmptyDI.Code.Implementation;
 
 namespace EmptyDI.Code.BindBuilder
 {
-    public partial class SingleBindBuilder<T> : IBindBuilder
+    public partial struct SingleBindBuilder<T> : IBindBuilder
         where T : class
     {
         /// <summary>
@@ -18,6 +18,7 @@ namespace EmptyDI.Code.BindBuilder
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T1), value));
 
             Info.ParamsInfo.ChangeConstructorParametersValue(parameters);
+            ExecutedInstaller.AddBindBuilder(this);
             return this;
         }
         /// <summary>
@@ -35,6 +36,7 @@ namespace EmptyDI.Code.BindBuilder
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T2), value2));
 
             Info.ParamsInfo.ChangeConstructorParametersValue(parameters);
+            ExecutedInstaller.AddBindBuilder(this);
             return this;
         }
         /// <summary>
@@ -55,6 +57,7 @@ namespace EmptyDI.Code.BindBuilder
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T3), value3));
 
             Info.ParamsInfo.ChangeConstructorParametersValue(parameters);
+            ExecutedInstaller.AddBindBuilder(this);
             return this;
         }
         /// <summary>
@@ -78,6 +81,7 @@ namespace EmptyDI.Code.BindBuilder
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T4), value4));
 
             Info.ParamsInfo.ChangeConstructorParametersValue(parameters);
+            ExecutedInstaller.AddBindBuilder(this);
             return this;
         }
         /// <summary>
@@ -104,6 +108,7 @@ namespace EmptyDI.Code.BindBuilder
             parameters.Enqueue(new ConstructorParameterInfo(typeof(T5), value5));
 
             Info.ParamsInfo.ChangeConstructorParametersValue(parameters);
+            ExecutedInstaller.AddBindBuilder(this);
             return this;
         }
     }

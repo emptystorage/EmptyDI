@@ -20,10 +20,7 @@ namespace EmptyDI
         {
             while (_builderQueue.Count > 0)
             {
-                using (var builder = _builderQueue.Dequeue())
-                {
-                    builder.Build();
-                }
+                _builderQueue.Dequeue().Build();
             }
         }
 

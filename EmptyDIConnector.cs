@@ -41,7 +41,7 @@ namespace EmptyDI
             ParameterValidation<T>();
             OnBindObject?.Invoke(typeof(T));
 
-            var builder = new SingleBindBuilder<T>(containerTag, implementation);
+            var builder = new SingleBindBuilder<T>(installer, containerTag, implementation);
             installer.AddBindBuilder(builder);
             return builder;
         }
@@ -62,7 +62,7 @@ namespace EmptyDI
             OnBindObject?.Invoke(typeof(P));
             OnBindObject?.Invoke(typeof(T));
 
-            var builder = new PoolBindBuilder<P, T>(implementation);
+            var builder = new PoolBindBuilder<P, T>(installer, implementation);
             installer.AddBindBuilder(builder);
             return builder.ObjectBuilder;
         }

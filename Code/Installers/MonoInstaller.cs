@@ -7,24 +7,23 @@ namespace EmptyDI
 {
     public abstract class MonoInstaller : MonoBehaviour, IInstaller
     {
-        private Queue<IBindBuilder> _builderQueue = new();
+        private Dictionary<int, IBindBuilder> _builderTable = new();
 
         public abstract void Install();
 
         void IInstaller.AddBindBuilder(IBindBuilder builder)
         {
-            _builderQueue.Enqueue(builder);
+            _builderTable[builder.ID] = builder;
         }
 
         void IInstaller.CompleteBind()
         {
-            while (_builderQueue.Count > 0)
+            foreach (var item in _builderTable)
             {
-                using(var builder = _builderQueue.Dequeue())
-                {
-                    builder.Build();
-                }
+                item.Value.Build();
             }
+
+            _builderTable.Clear();
         }
 
         private void Reset()
