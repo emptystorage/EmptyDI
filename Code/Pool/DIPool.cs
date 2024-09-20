@@ -24,7 +24,7 @@ namespace EmptyDI.Pool
             return @object;
         }
 
-        public void Despawm(T @object)
+        public void Despawn(T @object)
         {
             OnDespawn(@object);
             ObjectStack.Push(@object);

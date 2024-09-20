@@ -1,8 +1,10 @@
-﻿namespace EmptyDI.Code.BindBuilder
+﻿using System;
+
+namespace EmptyDI.Code.BindBuilder
 {
     public interface IBindBuilder 
     {
-        int ID { get; }
+        Type Type { get; }
         void Build();
     }
 }

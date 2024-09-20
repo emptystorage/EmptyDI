@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 using EmptyDI.Code.BindBuilder;
@@ -7,21 +8,26 @@ namespace EmptyDI
 {
     public abstract class ScriptableObjectInstaller : ScriptableObject, IInstaller
     {
-        private Queue<IBindBuilder> _builderQueue = new();
+        private Dictionary<Type, IBindBuilder> _builders = new();
+
+        public event Action InstallCompleted;
 
         public abstract void Install();
 
         void IInstaller.AddBindBuilder(IBindBuilder builder)
         {
-            _builderQueue.Enqueue(builder);
+            _builders[builder.Type] = builder;
         }
 
         void IInstaller.CompleteBind()
         {
-            while (_builderQueue.Count > 0)
+            foreach (var item in _builders.Values)
             {
-                _builderQueue.Dequeue().Build();
+                item.Build();
             }
+
+            _builders.Clear();
+            InstallCompleted?.Invoke();
         }
 
         private void Reset()

@@ -16,14 +16,12 @@ namespace EmptyDI.Code.BindBuilder
         private bool _isCreateNow;
         private bool _isTransitLock;
 
-        public int ID { get; }
-
         internal SingleBindBuilder(IInstaller executedInstaller, string containerTag, ImplementationInfo info, bool isTransitLock = false)
         {
-            ID = typeof(T).GetHashCode();
             ExecutedInstaller = executedInstaller;
             Info = info;
             ContainerTag = containerTag;
+
             _isTransitLock = isTransitLock;
             _isCreateNow = false;
         }
@@ -33,18 +31,21 @@ namespace EmptyDI.Code.BindBuilder
             var containerBank = InternalLocator.GetObject<ContainerBank>();
             var transitImplementationbank = InternalLocator.GetObject<TransitImplementationBank>();
 
-            ID = typeof(T).GetHashCode();
             ExecutedInstaller = executedInstaller;
             Info = new ImplementationInfo(@object, typeof(T), transitImplementationbank, containerBank.FindImplementation);
             ContainerTag = containerTag;
+
             _isTransitLock = true;
             _isCreateNow = false;
         }
+
+        public Type Type => typeof(T);
+
         /// <summary>
         /// Создать объект незамедлительно
         /// </summary>
         /// <returns></returns>
-        public SingleBindBuilder<T> IsNowCreate()
+        public SingleBindBuilder<T> IsCreated()
         {
             _isCreateNow = true;
             ExecutedInstaller.AddBindBuilder(this);
@@ -55,6 +56,7 @@ namespace EmptyDI.Code.BindBuilder
         /// </summary>
         public void AsSingle()
         {
+            _isTransitLock = false;
             Info.BindingType = BindingType.Single;
             ExecutedInstaller.AddBindBuilder(this);
         }

@@ -13,7 +13,7 @@ namespace EmptyDI
     {
         public static ProjectContext ProjectContext { get; private set; }
 
-        internal static event Action<Type> OnBindObject;
+        public static event Action<Type> OnBindObject;
 
         /// <summary>
         /// Добавить объект в контейнер, как зависимость

@@ -115,7 +115,9 @@ namespace EmptyDI.Code.Implementation
 
         internal void ChangeParameterValue(ConstructorParameterInfo parameterInfo, int paramterIndex)
         {
-            var info = _params.FindAll(x => x.ParameterType.Equals(parameterInfo.ParameterType));
+            var info = _params.FindAll(x => x.ParameterType.Equals(parameterInfo.ParameterType) 
+                                            || (x.ParameterType.Equals(typeof(Single)) & parameterInfo.ParameterType.Equals(typeof(Int32)))
+                                                || (x.ParameterType.Equals(typeof(Int32)) & parameterInfo.ParameterType.Equals(typeof(Single))));
 
             if (info == null)
                 throw new Exception($"Не найден параметр - {parameterInfo.ParameterType} в реализации - {Constructor.ReflectedType.Name}");

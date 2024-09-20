@@ -53,6 +53,13 @@ namespace EmptyDI.Code.Implementation
                 {
                     _implementation = new ImplementationFactory().Create<T>(ImplementationType, ParamsInfo, _implementation, _isMonoObject);
                 }
+                else
+                {
+                    if (_isMonoObject)
+                    {
+                        ParamsInfo.Constructor.Invoke(_implementation, ParamsInfo.Params);
+                    }
+                }
 
                 return _implementation as T;
             }
