@@ -3,6 +3,7 @@ using UnityEngine;
 
 using EmptyDI.Code.BindBuilder;
 using System;
+using EmptyDI.Code.Context;
 
 namespace EmptyDI
 {
@@ -33,6 +34,13 @@ namespace EmptyDI
         private void Reset()
         {
             name = GetType().Name;
+
+            var context = GetComponentInParent<BaseContext>();
+
+            if(context != null)
+            {
+                context.AddInstaller(this);
+            }
         }
     }
 }

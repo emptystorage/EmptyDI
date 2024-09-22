@@ -1,4 +1,5 @@
 ﻿using EmptyDI.Code.BindBuilder;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,6 +37,12 @@ namespace EmptyDI.Code.Context
             {
                 ExecuteBind();
             }
+        }
+
+        internal void AddInstaller(in MonoInstaller installer)
+        {
+            Array.Resize(ref _monoInstallers, _monoInstallers.Length + 1);
+            _monoInstallers[_monoInstallers.Length - 1] = installer;
         }
 
         private void ExecuteBind()
