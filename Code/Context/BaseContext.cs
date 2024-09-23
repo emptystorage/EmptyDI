@@ -41,7 +41,14 @@ namespace EmptyDI.Code.Context
 
         internal void AddInstaller(in MonoInstaller installer)
         {
-            Array.Resize(ref _monoInstallers, _monoInstallers.Length + 1);
+            if (_monoInstallers == null)
+            {
+                _monoInstallers = new MonoInstaller[1];
+            }
+            else
+            {
+                Array.Resize(ref _monoInstallers, _monoInstallers.Length + 1);
+            }
             _monoInstallers[_monoInstallers.Length - 1] = installer;
         }
 
