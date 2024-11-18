@@ -6,6 +6,7 @@ namespace EmptyDI
 {
     public static class CreateScriptTemplatesEmptyDI
     {
+#if UNITY_EDITOR
         [MenuItem("Assets/Create/EmptyDI/New Mono Installer", priority = 9)]
         public static void CreateNewPresentorClass()
         {
@@ -19,6 +20,7 @@ namespace EmptyDI
 
             ProjectWindowUtil.CreateScriptAssetFromTemplateFile(path, "NewMonoInstaller.cs");
         }
+#endif
     }
 
 }
