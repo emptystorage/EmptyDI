@@ -1,7 +1,7 @@
-﻿using EmptyDI.Code.BindBuilder;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace EmptyDI.Code.Context
@@ -9,13 +9,18 @@ namespace EmptyDI.Code.Context
     public abstract class BaseContext : MonoBehaviour
     {
         [Header("Mono Installers")]
-        [SerializeField] private MonoInstaller[] _monoInstallers;
+        [SerializeField] private List<MonoInstaller> _monoInstallers;
 
         [Header("Scriptable Obejct Installers")]
-        [SerializeField] private ScriptableObjectInstaller[] _scriptableObjectInstallers;
+        [SerializeField] private List<ScriptableObjectInstaller> _scriptableObjectInstallers;
 
         [SerializeField] private ExecuteBindType _executeBindType = ExecuteBindType.Start;
 
+        private void Reset()
+        {
+            _monoInstallers = new List<MonoInstaller>();
+            _scriptableObjectInstallers = new List<ScriptableObjectInstaller>();
+        }
 
         private void Awake()
         {
@@ -41,15 +46,14 @@ namespace EmptyDI.Code.Context
 
         internal void AddInstaller(in MonoInstaller installer)
         {
-            if (_monoInstallers == null)
-            {
-                _monoInstallers = new MonoInstaller[1];
-            }
-            else
-            {
-                Array.Resize(ref _monoInstallers, _monoInstallers.Length + 1);
-            }
-            _monoInstallers[_monoInstallers.Length - 1] = installer;
+            if (_monoInstallers.Contains(installer)) return;
+
+            _monoInstallers.Add(installer);
+        }
+
+        internal void RemoveInstaller(in MonoInstaller installer)
+        {
+            _monoInstallers.Remove(installer);
         }
 
         private void ExecuteBind()
@@ -63,14 +67,14 @@ namespace EmptyDI.Code.Context
         protected virtual void ContextStarted() { }
         protected virtual void ContextCompleted() { }
 
-        private void ExecuteInstallers(IInstaller[] installers)
+        private void ExecuteInstallers(IReadOnlyList<IInstaller> installers)
         {
-            for (int i = 0; i < installers.Length; i++)
+            for (int i = 0; i < installers.Count; i++)
             {
                 installers[i].Install();
             }
 
-            for (int i = 0; i < installers.Length; i++)
+            for (int i = 0; i < installers.Count; i++)
             {
                 installers[i].CompleteBind();
             }

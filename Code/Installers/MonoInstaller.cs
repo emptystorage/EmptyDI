@@ -7,6 +7,7 @@ using EmptyDI.Code.Context;
 
 namespace EmptyDI
 {
+    [ExecuteInEditMode]
     public abstract class MonoInstaller : MonoBehaviour, IInstaller
     {
         private Dictionary<Type, IBindBuilder> _builders = new();
@@ -31,7 +32,7 @@ namespace EmptyDI
             InstallCompleted?.Invoke();
         }
 
-        private void Reset()
+        private void Awake()
         {
             name = GetType().Name;
 
@@ -40,6 +41,16 @@ namespace EmptyDI
             if(context != null)
             {
                 context.AddInstaller(this);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            var context = GetComponentInParent<BaseContext>();
+
+            if(context != null)
+            {
+                context.RemoveInstaller(this);
             }
         }
     }
