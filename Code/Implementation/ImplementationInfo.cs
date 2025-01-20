@@ -105,17 +105,14 @@ namespace EmptyDI.Code.Implementation
 
             if (_isMonoObject)
             {
-                if(BindingType == BindingType.Transit)
-                {
-                    Bank.ForEach(
+                Bank.ForEach(
                         ImplementationType,
                         x =>
                         {
                             Object.Destroy(x as Object);
                         });
 
-                    Bank.Remove(ImplementationType);
-                }
+                Bank.Remove(ImplementationType);
             }
 
             _implementation = null;
