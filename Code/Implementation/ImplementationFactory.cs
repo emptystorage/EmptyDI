@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace EmptyDI.Code.Implementation
 {
-    internal struct ImplementationFactory
+    internal ref struct ImplementationFactory
     {
         internal object Create<T>(Type type, ImplementationConstructorParamsInfo constructParameter, object implementation, bool isMonoObject)
             where T : class

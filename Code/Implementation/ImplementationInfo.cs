@@ -23,16 +23,12 @@ namespace EmptyDI.Code.Implementation
         internal ImplementationInfo(
             object implementation, 
             Type implementationType, 
-            TransitImplementationBank bank,
-            Func<Type, ImplementationInfo> onGetImplementationCallback)
+            ImplementationConstructorParamsInfo paramsInfo,
+            TransitImplementationBank bank)
         {
             ImplementationType = implementationType;
             Bank = bank;
-            ParamsInfo = new ImplementationConstructorParamsInfo(
-                                        ImplementationTools.GetConstructor(implementationType), 
-                                        implementationType, 
-                                        onGetImplementationCallback);
-
+            ParamsInfo = paramsInfo;
             _implementation = implementation;
             _isDisposable = implementationType.GetInterface(nameof(IDisposable)) != null;
             _isMonoObject = implementationType.IsSubclassOf(typeof(UnityEngine.MonoBehaviour));

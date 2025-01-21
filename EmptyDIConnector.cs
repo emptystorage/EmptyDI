@@ -6,6 +6,7 @@ using EmptyDI.Code.Locator;
 using EmptyDI.Code.DIContainer;
 using EmptyDI.Code.Context;
 using EmptyDI.Pool;
+using System.Collections.Generic;
 
 namespace EmptyDI
 {
@@ -46,14 +47,17 @@ namespace EmptyDI
             return builder;
         }
         /// <summary>
-        /// Добавить объект в контейнер пул и объект, как зависимость
+        /// Добавить в контейнер пул и объект, как зависимость
         /// </summary>
+        /// <remarks>
+        /// Добавленный объект в пул автоматически явлются многоразовым - AsTransit
+        /// </remarks>
         /// <typeparam name="P">Тип пула</typeparam>
         /// <typeparam name="T">Тип объекта</typeparam>
         /// <param name="installer"></param>
         /// <param name="implementation">Реализация объекта</param>
         /// <returns></returns>
-        public static SingleBindBuilder<T> Bind<P, T>(this IInstaller installer, T implementation = null)
+        public static void Bind<P, T>(this IInstaller installer, T implementation = null)
             where P : DIPool<T>, new()
             where T : class
         {
@@ -64,7 +68,31 @@ namespace EmptyDI
 
             var builder = new PoolBindBuilder<P, T>(installer, implementation);
             installer.AddBindBuilder(builder);
-            return builder.ObjectBuilder;
+        }
+
+        /// <summary>
+        /// Добавить в контейнер пул и группу однотипных объектов, как зависимость с учетом key - value
+        /// </summary>
+        /// <remarks>
+        /// Добавленные объекты в пул автоматически явлются многоразовыми - AsTransit
+        /// </remarks>
+        /// <typeparam name="P">Тип пулла</typeparam>
+        /// <typeparam name="K">Тип ключа</typeparam>
+        /// <typeparam name="T">Тип объектов</typeparam>
+        /// <param name="installer"></param>
+        /// <param name="implementations">Группа объектов</param>
+        /// <param name="getKeyCallback">Мето-агрумент по созданию ключа</param>
+        public static void Bind <P, K, T>(this IInstaller installer, T[] implementations, Func<T, K> getKeyCallback)
+            where P : DIPool<K, T>, new()
+            where T : class
+        {
+            ParameterValidation<P>();
+            ParameterValidation<T>();
+            OnBindObject?.Invoke(typeof(P));
+            OnBindObject?.Invoke(typeof(T));
+
+            var builder = new PoolBindBuilder<P, K, T>(installer, implementations, getKeyCallback);
+            installer.AddBindBuilder(builder);
         }
 
         /// <summary>

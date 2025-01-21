@@ -3,6 +3,7 @@
 using EmptyDI.Code.Implementation;
 using EmptyDI.Code.Locator;
 using EmptyDI.Code.DIContainer;
+using EmptyDI.Code.Tools;
 
 namespace EmptyDI.Code.BindBuilder
 {
@@ -30,10 +31,11 @@ namespace EmptyDI.Code.BindBuilder
         {
             var containerBank = InternalLocator.GetObject<ContainerBank>();
             var transitImplementationbank = InternalLocator.GetObject<TransitImplementationBank>();
+            var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(T)), typeof(T), containerBank.FindImplementation);
 
-            ExecutedInstaller = executedInstaller;
-            Info = new ImplementationInfo(@object, typeof(T), transitImplementationbank, containerBank.FindImplementation);
+            Info = new ImplementationInfo(@object, typeof(T), paramsInfo, transitImplementationbank);
             ContainerTag = containerTag;
+            ExecutedInstaller = executedInstaller;
 
             _isTransitLock = true;
             _isCreateNow = false;
