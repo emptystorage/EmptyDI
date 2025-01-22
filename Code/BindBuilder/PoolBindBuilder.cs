@@ -16,23 +16,11 @@ namespace EmptyDI.Code.BindBuilder
 
         internal PoolBindBuilder(IInstaller executedInstaller, T implementation)
         {
-            var containerBank = InternalLocator.GetObject<ContainerBank>();
-            var transitBank = InternalLocator.GetObject<TransitImplementationBank>();
             var pool = new P();
+            pool.Info = new ImplementationInfoConstructor<T>().Create(implementation);
+            pool.Info.BindingType = BindingType.Transit;
 
-            //OBJECT
-            {
-                var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(T)), typeof(T), containerBank.FindImplementation);
-                var objectInfo = new ImplementationInfo(implementation, typeof(T), paramsInfo, transitBank);
-                objectInfo.BindingType = BindingType.Transit;
-                pool.Info = objectInfo;
-            }
-
-            //POOL
-            {
-                var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(P)), typeof(P), containerBank.FindImplementation);
-                PoolBuilder = new SingleBindBuilder<P>(executedInstaller, "pools", new ImplementationInfo(pool, typeof(P), paramsInfo, transitBank));
-            }
+            PoolBuilder = new SingleBindBuilder<P>(executedInstaller, "pools", new ImplementationInfoConstructor<P>().Create(pool));
         }
 
         public Type Type => typeof(P);
@@ -49,33 +37,26 @@ namespace EmptyDI.Code.BindBuilder
     {
         private readonly IBindBuilder PoolBuilder;
 
+        internal PoolBindBuilder(IInstaller executedInstaller)
+        {
+            var pool = new P();
+
+            PoolBuilder = new SingleBindBuilder<P>(executedInstaller, "pools", new ImplementationInfoConstructor<P>().Create(pool)); ;
+        }
+
         internal PoolBindBuilder(IInstaller executedInstaller, T[] implementations, Func<T, K> getKeyCallback)
         {
 
             if(getKeyCallback == null)
                 throw new ArgumentNullException($"Не указан метод-аргумент по получению ключа типа - {typeof(K).Name} для объектов типа-{typeof(T).Name} в пуле типа - {typeof(P).Name}");
 
-
-            var containerBank = InternalLocator.GetObject<ContainerBank>();
-            var transitBank = InternalLocator.GetObject<TransitImplementationBank>();
             var pool = new P();
 
-            //OBJECT
-            {
-                var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(T)), typeof(T), containerBank.FindImplementation);
+            PoolBuilder = new SingleBindBuilder<P>(executedInstaller, "pools", new ImplementationInfoConstructor<P>().Create(pool));;
 
-                for (int i = 0; i < implementations.Length; i++)
-                {
-                    var objectInfo = new ImplementationInfo(implementations[i], typeof(T), paramsInfo, transitBank);
-                    objectInfo.BindingType = BindingType.Transit;
-                    pool.AddImplamintationInfo(getKeyCallback.Invoke(implementations[i]), objectInfo);
-                }
-            }
-
-            //POOL
+            for (int i = 0; i < implementations.Length; i++)
             {
-                var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(P)), typeof(P), containerBank.FindImplementation);
-                PoolBuilder = new SingleBindBuilder<P>(executedInstaller, "pools", new ImplementationInfo(pool, typeof(P), paramsInfo, transitBank));
+                pool.Bind(getKeyCallback.Invoke(implementations[i]), implementations[i]);
             }
         }
 

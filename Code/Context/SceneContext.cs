@@ -14,16 +14,16 @@ namespace EmptyDI.Code.Context
 
         protected override void ContextStarted()
         {
-            EmptyDIConnector.OnBindObject += ObjectBinded;
+            EmptyDIConnector.BindedObject += OnBindedObject;
         }
 
         protected override void ContextCompleted()
         {
-            EmptyDIConnector.OnBindObject -= ObjectBinded;
+            EmptyDIConnector.BindedObject -= OnBindedObject;
             SceneManager.sceneUnloaded += SceneIsUnloaded;
         }
 
-        private void ObjectBinded(Type type)
+        private void OnBindedObject(Type type)
         {
             _sceneBindedTypes.Push(type);
         }

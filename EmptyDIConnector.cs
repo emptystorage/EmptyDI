@@ -14,7 +14,7 @@ namespace EmptyDI
     {
         public static ProjectContext ProjectContext { get; private set; }
 
-        public static event Action<Type> OnBindObject;
+        public static event Action<Type> BindedObject;
 
         /// <summary>
         /// Добавить объект в контейнер, как зависимость
@@ -40,14 +40,14 @@ namespace EmptyDI
             where T : class
         {
             ParameterValidation<T>();
-            OnBindObject?.Invoke(typeof(T));
+            BindedObject?.Invoke(typeof(T));
 
             var builder = new SingleBindBuilder<T>(installer, containerTag, implementation);
             installer.AddBindBuilder(builder);
             return builder;
         }
         /// <summary>
-        /// Добавить в контейнер пул и объект, как зависимость
+        /// Добавить в контейнер пул объектов, как зависимость
         /// </summary>
         /// <remarks>
         /// Добавленный объект в пул автоматически явлются многоразовым - AsTransit
@@ -63,15 +63,15 @@ namespace EmptyDI
         {
             ParameterValidation<P>();
             ParameterValidation<T>();
-            OnBindObject?.Invoke(typeof(P));
-            OnBindObject?.Invoke(typeof(T));
+
+            BindedObject?.Invoke(typeof(P));
 
             var builder = new PoolBindBuilder<P, T>(installer, implementation);
             installer.AddBindBuilder(builder);
         }
 
         /// <summary>
-        /// Добавить в контейнер пул и группу однотипных объектов, как зависимость с учетом key - value
+        /// Добавить в контейнер пул заполенный группы однотипных объектов, как зависимость с учетом key - value
         /// </summary>
         /// <remarks>
         /// Добавленные объекты в пул автоматически явлются многоразовыми - AsTransit
@@ -88,10 +88,33 @@ namespace EmptyDI
         {
             ParameterValidation<P>();
             ParameterValidation<T>();
-            OnBindObject?.Invoke(typeof(P));
-            OnBindObject?.Invoke(typeof(T));
+
+            BindedObject?.Invoke(typeof(P));
 
             var builder = new PoolBindBuilder<P, K, T>(installer, implementations, getKeyCallback);
+            installer.AddBindBuilder(builder);
+        }
+
+        /// <summary>
+        /// Добавить в контейнер пул пустой для группы однотипных объектов, как зависимость с учетом key - value 
+        /// </summary>
+        /// <remarks>
+        /// Добавленные объекты в пул автоматически явлются многоразовыми - AsTransit
+        /// </remarks>
+        /// <typeparam name="P">Тип пулла</typeparam>
+        /// <typeparam name="K">Тип ключа</typeparam>
+        /// <typeparam name="T">Тип объектов</typeparam>
+        /// <param name="installer"></param>
+        public static void Bind<P,K,T>(this IInstaller installer)
+            where P : DIPool<K,T>, new()
+            where T : class
+        {
+            ParameterValidation<P>();
+            ParameterValidation<T>();
+
+            BindedObject?.Invoke(typeof(P));
+
+            var builder = new PoolBindBuilder<P, K, T>(installer);
             installer.AddBindBuilder(builder);
         }
 

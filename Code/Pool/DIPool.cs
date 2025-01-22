@@ -49,6 +49,12 @@ namespace EmptyDI.Pool
 
         public DIPool() { }
 
+        public void Bind(K key, T @object)
+        {
+            TableInfo[key] = new ImplementationInfoConstructor<T>().Create(@object);
+            TableInfo[key].BindingType = BindingType.Transit;
+        }
+
         public T Spawn(K @key)
         {
             if (!TableInfo.TryGetValue(@key, out var info))
@@ -87,17 +93,15 @@ namespace EmptyDI.Pool
             OnDespawn(@object);
         }
 
-        internal void AddImplamintationInfo(K key, in ImplementationInfo info)
-        {
-            TableInfo[key] = info;
-        }
-
         protected virtual void OnSpawn(T @object) { }
         protected virtual void OnDespawn(T @object) { }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            TableObjectStack.Clear();
+            TableInfo.Clear();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

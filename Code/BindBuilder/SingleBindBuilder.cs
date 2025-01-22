@@ -29,11 +29,7 @@ namespace EmptyDI.Code.BindBuilder
 
         internal SingleBindBuilder(IInstaller executedInstaller, string containerTag, T @object = null)
         {
-            var containerBank = InternalLocator.GetObject<ContainerBank>();
-            var transitImplementationbank = InternalLocator.GetObject<TransitImplementationBank>();
-            var paramsInfo = new ImplementationConstructorParamsInfo(ImplementationTools.GetConstructor(typeof(T)), typeof(T), containerBank.FindImplementation);
-
-            Info = new ImplementationInfo(@object, typeof(T), paramsInfo, transitImplementationbank);
+            Info = new ImplementationInfoConstructor<T>().Create(@object);
             ContainerTag = containerTag;
             ExecutedInstaller = executedInstaller;
 
