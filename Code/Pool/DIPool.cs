@@ -35,6 +35,9 @@ namespace EmptyDI.Pool
 
         public void Dispose()
         {
+            Info.Dispose();
+            Info = null;
+
             ObjectStack.Clear();
 
             GC.SuppressFinalize(this);
@@ -49,11 +52,13 @@ namespace EmptyDI.Pool
 
         public DIPool() { }
 
-        public void Bind(K key, T @object)
+        public void Bind(K @key, T @object)
         {
-            TableInfo[key] = new ImplementationInfoConstructor<T>().Create(@object);
-            TableInfo[key].BindingType = BindingType.Transit;
+            TableInfo[@key] = new ImplementationInfoConstructor<T>().Create(@object);
+            TableInfo[@key].BindingType = BindingType.Transit;
         }
+
+        public bool IsContainsOf(K @key) => TableInfo.ContainsKey(@key);
 
         public T Spawn(K @key)
         {
@@ -98,8 +103,13 @@ namespace EmptyDI.Pool
 
         public void Dispose()
         {
-            TableObjectStack.Clear();
+            foreach (var item in TableInfo)
+            {
+                item.Value.Dispose();
+            }
+
             TableInfo.Clear();
+            TableObjectStack.Clear();
 
             GC.SuppressFinalize(this);
         }
