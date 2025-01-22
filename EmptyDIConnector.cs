@@ -62,7 +62,6 @@ namespace EmptyDI
             where T : class
         {
             ParameterValidation<P>();
-            ParameterValidation<T>();
 
             BindedObject?.Invoke(typeof(P));
 
@@ -87,7 +86,6 @@ namespace EmptyDI
             where T : class
         {
             ParameterValidation<P>();
-            ParameterValidation<T>();
 
             BindedObject?.Invoke(typeof(P));
 
@@ -110,7 +108,6 @@ namespace EmptyDI
             where T : class
         {
             ParameterValidation<P>();
-            ParameterValidation<T>();
 
             BindedObject?.Invoke(typeof(P));
 

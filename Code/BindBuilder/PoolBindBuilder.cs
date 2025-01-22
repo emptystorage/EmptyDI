@@ -1,10 +1,6 @@
 ﻿using System;
 using EmptyDI.Pool;
-using EmptyDI.Code.Locator;
-using EmptyDI.Code.DIContainer;
 using EmptyDI.Code.Implementation;
-using EmptyDI.Code.Tools;
-using Unity.Plastic.Newtonsoft.Json.Linq;
 
 namespace EmptyDI.Code.BindBuilder
 {
