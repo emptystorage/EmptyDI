@@ -74,6 +74,7 @@ namespace EmptyDI.Code.Implementation
         internal void ChangeConstructorParametersValue(Queue<ConstructorParameterInfo> parameters)
         {
             var parameterIndexTable = new Dictionary<Type, int>();
+            var paramterIndex = 0;
 
             while(parameters.Count > 0)
             {
@@ -85,8 +86,10 @@ namespace EmptyDI.Code.Implementation
                 }
                 else
                 {
-                    parameterIndexTable[info.ParameterType] = indexTypeOf;
+                    parameterIndexTable[info.ParameterType] = paramterIndex;
                 }
+
+                paramterIndex++;
 
                 ChangeParameterValue(info, parameterIndexTable[info.ParameterType]);
             }
